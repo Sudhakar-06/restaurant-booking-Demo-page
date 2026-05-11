@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAISON ÉCLAT — Fine Dining</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #f7f2e8;
+    --dark: #1a1612;
+    --wine: #6b2737;
+    --gold: #c9a84c;
+    --sage: #7a8c6e;
+    --warm: #e8dcc8;
+    --text: #3a3028;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+  nav ul { list-style: none; display: flex; gap: 40px; align-items: center; }
+  nav ul a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 400;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+  }
+  nav ul a:hover { opacity: 1; }
+  .reserve-btn {
+    border: 1px solid rgba(247,242,232,0.5) !important;
+    padding: 10px 28px !important;
+    opacity: 1 !important;
+    transition: all 0.3s !important;
+  }
+  .reserve-btn:hover {
+    background: var(--cream) !important;
+    color: var(--dark) !important;
+  }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    background: var(--dark);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg-pattern {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(107,39,55,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 80% at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #1a1612 0%, #0d0b08 100%);
+  }
+  /* Decorative border */
+  .hero-frame {
+    position: absolute;
+    inset: 32px;
+    border: 1px solid rgba(201,168,76,0.2);
+    pointer-events: none;
+  }
+  .hero-frame::before, .hero-frame::after {
+    content: '✦';
+    position: absolute;
+    color: var(--gold);
+    font-size: 10px;
+    opacity: 0.6;
+  }
+  .hero-frame::before { top: -6px; left: 50%; transform: translateX(-50%); }
+  .hero-frame::after { bottom: -6px; left: 50%; transform: translateX(-50%); }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 0 24px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeIn 1s 0.3s ease forwards;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 10vw, 130px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--cream);
+    letter-spacing: 4px;
+    opacity: 0;
+    animation: fadeIn 1.2s 0.5s ease forwards;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin: 36px 0;
+    opacity: 0;
+    animation: fadeIn 1s 0.8s ease forwards;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    width: 80px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .hero-divider::after { background: linear-gradient(to left, transparent, var(--gold)); }
+  .hero-divider span { color: var(--gold); font-size: 12px; letter-spacing: 4px; text-transform: uppercase; }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: rgba(247,242,232,0.55);
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeIn 1s 1s ease forwards;
+  }
+  .hero-cta {
+    margin-top: 52px;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s ease forwards;
+  }
+  .btn-gold {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 16px 48px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-gold::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--wine);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  .btn-gold:hover::before { transform: translateX(0); }
+  .btn-gold span { position: relative; z-index: 1; color: var(--cream); }
+  .btn-gold:hover span { color: var(--cream); }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute; bottom: 48px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(201,168,76,0.5);
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    animation: fadeIn 1s 1.5s ease forwards; opacity: 0;
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* INTRO */
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+  }
+  .intro-text {
+    background: var(--cream);
+    padding: 100px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold); opacity: 0.3; max-width: 40px; }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 28px;
+  }
+  h2 em { font-style: italic; color: var(--wine); }
+  .intro-text p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #5a5040;
+    max-width: 420px;
+    margin-bottom: 20px;
+  }
+  .intro-sig {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--wine);
+    margin-top: 16px;
+  }
+  .intro-visual {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .intro-visual-inner {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 70% at 50% 50%, rgba(107,39,55,0.5) 0%, transparent 70%),
+      linear-gradient(135deg, #1a1612, #0d0b08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dish-display {
+    text-align: center;
+    color: var(--cream);
+  }
+  .dish-emoji { font-size: 80px; display: block; margin-bottom: 24px; filter: drop-shadow(0 0 40px rgba(201,168,76,0.3)); }
+  .dish-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-style: italic;
+    color: var(--gold);
+  }
+  .dish-desc { font-size: 12px; letter-spacing: 2px; color: rgba(247,242,232,0.4); margin-top: 8px; text-transform: uppercase; }
+
+  /* MENU SECTION */
+  .menu-section {
+    background: var(--dark);
+    padding: 120px 80px;
+  }
+  .menu-section .section-label { color: var(--gold); }
+  .menu-section .section-label::after { background: var(--gold); }
+  .menu-section h2 { color: var(--cream); }
+  .menu-section h2 em { color: var(--gold); }
+
+  .menu-tabs {
+    display: flex; gap: 0;
+    margin: 48px 0 0;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .tab-btn {
+    background: none; border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(247,242,232,0.4);
+    padding: 16px 32px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.3s;
+  }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-btn:hover { color: var(--cream); }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 48px;
+  }
+  .menu-item {
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    display: flex; justify-content: space-between; align-items: start;
+    gap: 24px;
+    transition: padding-left 0.3s;
+  }
+  .menu-item:hover { padding-left: 8px; }
+  .menu-item:nth-child(odd) { padding-right: 60px; border-right: 1px solid rgba(201,168,76,0.1); }
+  .menu-item:nth-child(even) { padding-left: 60px; }
+  .menu-item-info h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+  .menu-item-info p { font-size: 12px; color: rgba(247,242,232,0.4); line-height: 1.6; max-width: 280px; }
+  .menu-item-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* EXPERIENCE */
+  .experience {
+    background: var(--warm);
+    padding: 120px 80px;
+    text-align: center;
+  }
+  .experience-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 72px;
+  }
+  .exp-card {
+    background: var(--cream);
+    padding: 64px 40px;
+    transition: background 0.4s;
+    cursor: default;
+  }
+  .exp-card:hover { background: var(--dark); }
+  .exp-card:hover .exp-icon { filter: none; }
+  .exp-card:hover h3, .exp-card:hover p { color: var(--cream); }
+  .exp-card:hover .exp-num { color: var(--gold); }
+  .exp-icon { font-size: 40px; margin-bottom: 24px; display: block; }
+  .exp-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 16px;
+    display: block; text-transform: uppercase;
+  }
+  .exp-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400;
+    color: var(--dark); margin-bottom: 16px;
+    transition: color 0.4s;
+  }
+  .exp-card p { font-size: 14px; color: #5a5040; line-height: 1.8; transition: color 0.4s; }
+
+  /* RESERVATION */
+  .reservation {
+    background: var(--wine);
+    padding: 120px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .reservation h2 { color: var(--cream); font-size: clamp(40px, 5vw, 64px); }
+  .reservation h2 em { color: var(--gold); }
+  .reservation p { color: rgba(247,242,232,0.6); font-size: 15px; line-height: 1.8; margin-top: 20px; }
+  .res-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-field {
+    background: rgba(247,242,232,0.08);
+    border: 1px solid rgba(247,242,232,0.2);
+    padding: 16px 20px;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    width: 100%;
+    transition: border-color 0.3s;
+    outline: none;
+  }
+  .form-field::placeholder { color: rgba(247,242,232,0.35); }
+  .form-field:focus { border-color: var(--gold); }
+  .btn-cream {
+    background: var(--cream);
+    color: var(--wine);
+    border: none;
+    padding: 18px 40px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .btn-cream:hover { background: var(--gold); color: var(--dark); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 64px 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300;
+    letter-spacing: 8px; text-transform: uppercase;
+    color: var(--gold);
+  }
+  footer p { color: rgba(247,242,232,0.3); font-size: 12px; letter-spacing: 2px; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a {
+    color: rgba(247,242,232,0.3);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav ul { display: none; }
+    nav { padding: 24px; }
+    .intro, .reservation { grid-template-columns: 1fr; }
+    .intro-visual { min-height: 50vh; }
+    .intro-text, .menu-section, .experience, .reservation { padding: 64px 24px; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .menu-item:nth-child(odd) { padding-right: 0; border-right: none; }
+    .menu-item:nth-child(even) { padding-left: 0; }
+    .experience-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 24px; text-align: center; padding: 48px 24px; }
+    .footer-links { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Maison Éclat</div>
+  <ul>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#reserve">Contact</a></li>
+    <li><a href="#reserve" class="reserve-btn">Reserve</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-frame"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Est. 2018 · Paris-Inspired Fine Dining</p>
+    <h1>MAISON<br><em>ÉCLAT</em></h1>
+    <div class="hero-divider"><span>Where Every Plate Tells a Story</span></div>
+    <p class="hero-sub">A curated journey through flavour, craft, and memory.</p>
+    <div class="hero-cta">
+      <a href="#reserve" class="btn-gold"><span>Reserve Your Table</span></a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="intro">
+  <div class="intro-text reveal">
+    <div class="section-label">Our Philosophy</div>
+    <h2>Food as <em>Art,</em><br>Service as Poetry</h2>
+    <p>At Maison Éclat, we believe a great meal is more than sustenance. It is a conversation — between land and sea, between tradition and innovation, between chef and guest.</p>
+    <p>Executive Chef Isabelle Moreau brings 20 years of Michelin-starred experience to every dish, sourcing only from local farms and sustainable fisheries.</p>
+    <div class="intro-sig">— Chef Isabelle Moreau</div>
+  </div>
+  <div class="intro-visual">
+    <div class="intro-visual-inner">
+      <div class="dish-display">
+        <span class="dish-emoji">🍽️</span>
+        <div class="dish-name">Signature Tasting Menu</div>
+        <div class="dish-desc">7 courses · Seasonal · Ever-changing</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="section-label reveal">Culinary Selection</div>
+  <h2 class="reveal">A <em>Season's</em><br>Best</h2>
+  <div class="menu-tabs reveal">
+    <button class="tab-btn active">Starters</button>
+    <button class="tab-btn">Mains</button>
+    <button class="tab-btn">Desserts</button>
+  </div>
+  <div class="menu-grid reveal">
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>Burrata & Heirloom Tomato</h4>
+        <p>Aged balsamic, micro basil, maldon salt, cold-pressed olive oil</p>
+      </div>
+      <div class="menu-item-price">$18</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>Seared Scallops</h4>
+        <p>Cauliflower velouté, caviar, champagne beurre blanc, chives</p>
+      </div>
+      <div class="menu-item-price">$26</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>Duck Liver Parfait</h4>
+        <p>Brioche toast, Sauternes jelly, pickled walnut, cornichon</p>
+      </div>
+      <div class="menu-item-price">$22</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>French Onion Velouté</h4>
+        <p>Gruyère croûton, chive oil, truffle shavings</p>
+      </div>
+      <div class="menu-item-price">$16</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>Steak Tartare</h4>
+        <p>Hand-cut Wagyu, Dijon, capers, cornichon, quail egg, rye crisp</p>
+      </div>
+      <div class="menu-item-price">$28</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <h4>Chilled Lobster Bisque</h4>
+        <p>Tarragon cream, fennel frond, lobster claw, saffron oil</p>
+      </div>
+      <div class="menu-item-price">$24</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-label reveal" style="justify-content:center">The Éclat Experience</div>
+  <h2 class="reveal">More Than a <em>Meal</em></h2>
+  <div class="experience-grid">
+    <div class="exp-card reveal">
+      <span class="exp-icon">🕯️</span>
+      <span class="exp-num">Atmosphere</span>
+      <h3>Intimate Ambiance</h3>
+      <p>Forty covers only. Candlelit tables, velvet drapes, and a wine list of 300 labels curated to complement every dish.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.15s">
+      <span class="exp-icon">👨‍🍳</span>
+      <span class="exp-num">Craft</span>
+      <h3>Chef's Table</h3>
+      <p>Six seats overlooking the open kitchen. Watch the culinary theatre unfold as Chef Moreau and her team create your evening.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.3s">
+      <span class="exp-icon">🍷</span>
+      <span class="exp-num">Pairing</span>
+      <h3>Sommelier Service</h3>
+      <p>Our head sommelier crafts a bespoke wine pairing for every tasting menu — or simply by your mood and preference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="reservation" id="reserve">
+  <div class="reveal">
+    <div class="section-label" style="color:rgba(247,242,232,0.5)">Reservations</div>
+    <h2>Join Us for<br>an <em>Unforgettable</em><br>Evening</h2>
+    <p>We accept reservations up to 60 days in advance. For parties of 8 or more, or private dining enquiries, please call us directly.</p>
+    <p style="margin-top:32px;font-size:13px;letter-spacing:2px;color:rgba(247,242,232,0.5)">+1 (212) 555-0194 · hello@maisoneclat.com</p>
+  </div>
+  <div class="reveal" style="transition-delay:0.2s">
+    <div class="res-form">
+      <div class="form-row">
+        <input class="form-field" type="text" placeholder="First Name">
+        <input class="form-field" type="text" placeholder="Last Name">
+      </div>
+      <input class="form-field" type="email" placeholder="Email Address">
+      <div class="form-row">
+        <input class="form-field" type="date">
+        <input class="form-field" type="time">
+      </div>
+      <select class="form-field" style="cursor:pointer">
+        <option value="" disabled selected>Number of Guests</option>
+        <option>1–2 Guests</option>
+        <option>3–4 Guests</option>
+        <option>5–6 Guests</option>
+        <option>7–8 Guests</option>
+        <option>9+ Guests (Private Dining)</option>
+      </select>
+      <textarea class="form-field" rows="3" placeholder="Special requests or dietary requirements..."></textarea>
+      <button class="btn-cream">Request Reservation →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Maison Éclat</div>
+  <p>© 2025 · All Rights Reserved</p>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">OpenTable</a>
+    <a href="#">Private Events</a>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  }));
+</script>
+</body>
+</html>
