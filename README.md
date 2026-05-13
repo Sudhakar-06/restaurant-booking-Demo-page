@@ -4,7 +4,7 @@
 
 Looking for a premium restaurant website?
 
-📩 Email: clientforgestudio@gmail.com / sudhakarrali516@gmail.com
+📩 Email: clientforgestudio@gmail.com / sudhakarrali516@gmail.com   
 💼 Portfolio: https://sudhakar-portfolio06.netlify.app/
 
 ---
